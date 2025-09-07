@@ -1,41 +1,37 @@
-const { DataTypes, Model } = require('sequelize');
-const { ulid } = require('ulid')
+'use strict';
+const { ulid } = require('ulid');
 
-class User extends Model { }
+module.exports = (sequelize, DataTypes) => {
+    const User = sequelize.define('User', {
+        id: {
+            type: DataTypes.STRING(26),
+            primaryKey: true,
+            defaultValue: () => ulid(),
+        },
+        email: {
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: true,
+            validate: { isEmail: true },
+        },
+        password: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        status: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: true,
+        },
+    }, {
+        tableName: 'users',
+        timestamps: true,
+        paranoid: true,
+        indexes: [
+            { unique: true, fields: ['id'] },
+            { unique: true, fields: ['email'] },
+        ],
+    });
 
-User.init({
-    id: {
-        type: DataTypes.STRING(26),
-        defaultValue: () => ulid(),
-        primaryKey: true,
-    },
-    email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            isEmail: true,
-        }
-    },
-    password: {
-        type: DataTypes.STRING,
-        allowNull: false,
-    },
-    status: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true,
-        allowNull: false,
-    },
-}, {
-    paranoid: true,
-    indexes: [
-        { unique: true, fields: ['email'] },
-        { unique: true, fields: ['id'] },
-    ],
-    sequelize,
-    modelName: 'User',
-    tableName: 'users',
-    timestamps: true,
-});
-
-module.exports = User;
+    return User;
+};
