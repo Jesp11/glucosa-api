@@ -13,6 +13,10 @@ class BaseRepository {
         return this.model.findByPk(id, { transaction });
     }
 
+    async findOne(where, transaction = null) {
+        return this.model.findOne({ where, transaction });
+    }
+
     async findAll(condition = {}, transaction = null) {
         return this.model.findAll({ where: condition, transaction });
     }

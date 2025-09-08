@@ -1,6 +1,11 @@
 'use strict';
 const Joi = require('joi');
 
+const loginSchema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+});
+
 const createUserSchema = Joi.object({
     email: Joi.string().email().required(),
     password: Joi.string().min(6).required(),
@@ -15,6 +20,7 @@ const deleteUserSchema = Joi.object({
 });
 
 module.exports = {
+    loginSchema,
     createUserSchema,
     changeStatusSchema,
     deleteUserSchema
